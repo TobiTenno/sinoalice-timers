@@ -1,0 +1,15 @@
+{
+  "name": "emil",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "TobiTenno",
+  "license": "AGPL-3.0",
+  "dependencies": {
+    "cron": "^1.8.2",
+    "discord.js": "^12.5.3"
+  }
+}
