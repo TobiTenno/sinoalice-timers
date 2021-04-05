@@ -8,13 +8,20 @@ client.on('ready', () => {
 });
 
 client.on('error', console.error);
-client.on('debug', console.log);
-client.on('info', console.log);
 
-const makeJob = (time, message) => {
+client.on('debug', (message) => {
+  if (!/(Sending a heartbeat|Latency of|voice)/i.test(message)) {
+    console.log(message);
+  }
+});
+
+const makeJob = (time, message, name) => {
   const job = new CronJob(time, async () => {
-    const notifications = client.channels.fetch(process.env.NOTIFICATIONS);
-    notifications.send(message);
+    const notifications = await client.channels.fetch(process.env.NOTIFICATIONS);
+    const pingId = process.env[`${name.toUpperCase()}_PING`] || '';
+    const ping = pingId ? `<@&${pingid}>` : '';
+    
+    notifications.send(`${ping} ${message}`);
   }, null, true, 'UTC');
   job.start();
   return job;
@@ -23,7 +30,7 @@ const makeJob = (time, message) => {
 Object.keys(crons).forEach(name => {
   const arr = crons[name];
   arr.times.forEach((time, index) => {
-    makeJob(time, arr.messages[index] || arr.messages[0]);
+    makeJob(time, arr.messages[index] || arr.messages[0], name);
   });
 });
 
